@@ -1,0 +1,15 @@
+.weather-wrapper {
+  margin: 150px 150px;
+}
+
+form {
+  display: flex;
+  gap: 15px;
+  align-content: baseline;
+}
+
+.error {
+  color: red;
+  height: 50px;
+  padding-top: 25px;
+}

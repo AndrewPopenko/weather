@@ -1,0 +1,62 @@
+<div class="weather-wrapper">
+  <div class="error" *ngIf="errorMsg">
+    {{ errorMsg | async }}
+  </div>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <mat-form-field style="margin-top: 10px">
+      <mat-label>City</mat-label>
+      <input
+        type="text"
+        matInput
+        formControlName="city"
+        [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let option of options" [value]="option">
+          {{option.key}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Units of measurement</mat-label>
+      <mat-select formControlName="unit">
+        <mat-option *ngFor="let unit of units" [value]="unit">
+          {{unit}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-button
+      type="submit"
+      color="primary"
+      [disabled]="!formGroup.valid">
+      Submit
+    </button>
+  </form>
+  <div class="container" *ngIf="weatherData">
+    <h1>Weather in {{ weatherData?.name }}, {{ weatherData?.sys?.country }}</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Temperature:</strong> {{ weatherData?.main?.temp | temperatureUnit: unit }}</p>
+        <p><strong>Feels Like:</strong> {{ weatherData?.main?.feels_like | temperatureUnit: unit }}</p>
+        <p><strong>Minimum Temperature:</strong> {{ weatherData?.main?.temp_min | temperatureUnit: unit }}</p>
+        <p><strong>Maximum Temperature:</strong> {{ weatherData?.main?.temp_max | temperatureUnit: unit }}</p>
+        <p><strong>Pressure:</strong> {{ weatherData?.main?.pressure }}</p>
+        <p><strong>Humidity:</strong> {{ weatherData?.main?.humidity }}%</p>
+        <p><strong>Visibility:</strong> {{ weatherData?.visibility }} meters</p>
+        <p><strong>Cloudiness:</strong> {{ weatherData?.clouds?.all }}%</p>
+        <p><strong>Rain (last hour):</strong> {{ weatherData?.rain?.["1h"] }} mm</p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Wind Speed:</strong> {{ weatherData?.wind?.speed | speedUnit: unit }}</p>
+        <p><strong>Wind Direction:</strong> {{ weatherData?.wind?.deg }}&deg;</p>
+        <p><strong>Wind Gust:</strong> {{ weatherData?.wind?.gust | speedUnit: unit }}</p>
+        <p><strong>Sunrise:</strong> {{ formatTime(weatherData?.sys?.sunrise, weatherData?.timezone) }}</p>
+        <p><strong>Sunset:</strong> {{ formatTime(weatherData?.sys?.sunset, weatherData?.timezone) }}</p>
+        <p><strong>Last Updated:</strong> {{ formatDate(weatherData?.dt, weatherData?.timezone) }}</p>
+        <p><strong>Weather:</strong> {{ weatherData?.weather[0]?.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>
